@@ -57,7 +57,7 @@ namespace SampleApp.DAL
                 using (SqlCommand command = new SqlCommand("usp_CheckEmailExists", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter("@Email", SqlDbType.VarChar, 100) { Value = email });                   
+                    command.Parameters.Add(new SqlParameter("@Email", SqlDbType.VarChar, 100) { Value = email });
                     SqlParameter param_MSG = new SqlParameter("@Ret_Msg", SqlDbType.VarChar, 100);
                     param_MSG.Direction = ParameterDirection.Output;
                     command.Parameters.Add(param_MSG);
@@ -86,16 +86,17 @@ namespace SampleApp.DAL
                     SqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
-                        lstRegistrations.Add(new RegistrationModel {
-                            Id=Convert.ToInt32(dataReader["Id"]),
-                            FullName=Convert.ToString(dataReader["FullName"]),
-                            DOB=Convert.ToDateTime(dataReader["DOB"]),
-                            Email= Convert.ToString(dataReader["Email"]),
-                            Phone= Convert.ToString(dataReader["Phone"]),
-                            Gender= Convert.ToString(dataReader["Gender"]),
-                            StateId= Convert.ToInt32(dataReader["StateId"]),
-                            StateName= Convert.ToString(dataReader["StateName"]),
-                            CreatedDate= Convert.ToDateTime(dataReader["CreatedDate"])
+                        lstRegistrations.Add(new RegistrationModel
+                        {
+                            Id = Convert.ToInt32(dataReader["Id"]),
+                            FullName = Convert.ToString(dataReader["FullName"]),
+                            DOB = Convert.ToDateTime(dataReader["DOB"]),
+                            Email = Convert.ToString(dataReader["Email"]),
+                            Phone = Convert.ToString(dataReader["Phone"]),
+                            Gender = Convert.ToString(dataReader["Gender"]),
+                            StateId = Convert.ToInt32(dataReader["StateId"]),
+                            StateName = Convert.ToString(dataReader["StateName"]),
+                            CreatedDate = Convert.ToDateTime(dataReader["CreatedDate"])
                         });
                     }
                     connection.Close();
@@ -120,11 +121,40 @@ namespace SampleApp.DAL
                         {
                             Id = Convert.ToInt32(dataReader["Id"]),
                             Name = Convert.ToString(dataReader["Name"]),
-                           
+
                         });
                     }
                     connection.Close();
                     return lstStates;
+                }
+            }
+        }
+        public RegistrationModel GetById(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("usp_GetById", connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+                    RegistrationModel registration = new RegistrationModel();
+                    command.CommandType = CommandType.StoredProcedure;
+                    connection.Open();
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+
+                        registration.Id = Convert.ToInt32(dataReader["Id"]);
+                        registration.FullName = Convert.ToString(dataReader["FullName"]);
+                        registration.DOB = Convert.ToDateTime(dataReader["DOB"]);
+                        registration.Email = Convert.ToString(dataReader["Email"]);
+                        registration.Phone = Convert.ToString(dataReader["Phone"]);
+                        registration.Gender = Convert.ToString(dataReader["Gender"]);
+                        registration.StateId = Convert.ToInt32(dataReader["State"]);
+                        registration.CreatedDate = Convert.ToDateTime(dataReader["CreatedDate"]);
+
+                    }
+                    connection.Close();
+                    return registration;
                 }
             }
         }

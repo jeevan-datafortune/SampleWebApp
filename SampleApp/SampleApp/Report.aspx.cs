@@ -30,7 +30,7 @@ namespace SampleApp
             List<RegistrationModel> registrations = GetAllRegistrations();
             StringBuilder htmlTable = new StringBuilder();
             htmlTable.Append("<table id='tblRegistrations' class='display'>");
-            htmlTable.Append("<thead><tr><th>SNo</th><th>Full Name</th><th>Gender</th><th>State</th><th>Date Of Birth</th><th>Email</th><th>Phone No</th><th>Date Of Registration</th></tr></thead>");
+            htmlTable.Append("<thead><tr><th>SNo</th><th>Full Name</th><th>Gender</th><th>State</th><th>Date Of Birth</th><th>Email</th><th>Phone No</th><th>Date Of Registration</th><th>Certificate</th></tr></thead>");
             htmlTable.Append("<tbody>");
             int sno = 1;
             foreach (var reg in registrations)
@@ -44,6 +44,7 @@ namespace SampleApp
                 htmlTable.AppendFormat("<td>{0}</td>", reg.Email);
                 htmlTable.AppendFormat("<td>{0}</td>", reg.Phone);
                 htmlTable.AppendFormat("<td>{0}</td>", reg.CreatedDate?.ToString("MM/dd/yyyy"));
+                htmlTable.AppendFormat("<td><a href=\"/CertificateHandler.ashx?id={0}\" class=\"download\">Download</a></td>", reg.Id);
                 htmlTable.Append("</tr>");
                 sno++;
             }
@@ -53,7 +54,7 @@ namespace SampleApp
             StringBuilder js = new StringBuilder();
             js.Append("<script>");
             js.Append("$(document).ready(function() {");
-            js.Append("$('#tblRegistrations').DataTable()");
+            js.AppendLine("$('#tblRegistrations').DataTable();");          
             js.Append("});");
             js.Append("</script>");
 
