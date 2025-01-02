@@ -30,6 +30,7 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label>Email <span class="required">*</span></label>
+                                <a href="#" id="checkavailability" style="font-size: 12px;">Click here to check email availability</a>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                                     <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" MaxLength="100"></asp:TextBox>
@@ -62,13 +63,13 @@
                             <div class="form-group">
                                 <label>Phone <span class="required">*</span></label>
                                 <div class="input-group">
-                                     <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-                                <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" MaxLength="12" placeholder="###-###-####"></asp:TextBox>
-                                    </div>
+                                    <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                                    <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" MaxLength="12" placeholder="###-###-####"></asp:TextBox>
+                                </div>
                                 <asp:RequiredFieldValidator ID="phoneRequiredValidator" runat="server"
                                     ControlToValidate="txtPhone" ValidationGroup="submit"
                                     ErrorMessage="Phone is required" CssClass="error"></asp:RequiredFieldValidator>
-                        </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -147,6 +148,26 @@
             $('#<%=txtPhone.ClientID %>').mask('000-000-0000');
             $('.btn-reset').click(function () {
                 document.forms[0].reset();
+            });
+            $('#checkavailability').click(function () {
+                let emailId = $('#<%=txtEmail.ClientID%>').val();
+                if (emailId && emailId != '') {
+                    $.ajax({
+                        url: "Register.aspx/CheckEmailAddressAvailability",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: '{ email:"' + emailId + '"}',
+                        cache: false,
+                        success: function (data) {
+                            $('#<%=lblMessage.ClientID%>').text(data.d);
+                             $('#myModal').modal('show');
+                        },
+                        error: function (response) {                           
+                            console.log(response);
+                        }
+                    })
+                }
             });
         });
     </script>

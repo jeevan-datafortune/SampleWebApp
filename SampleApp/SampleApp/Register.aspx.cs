@@ -4,6 +4,7 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using System.Web.Services;
 using System.Web.UI;
 
 namespace SampleApp
@@ -75,6 +76,12 @@ namespace SampleApp
             {
              
             }
+        }
+
+        [WebMethod]
+        public static string CheckEmailAddressAvailability(string email)
+        {
+            return new RegistrationModule().CheckEmailAvailability(email);
         }
     }
 }
