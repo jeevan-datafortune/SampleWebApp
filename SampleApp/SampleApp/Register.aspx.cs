@@ -1,6 +1,9 @@
 ﻿using SampleApp.DAL;
 using SampleApp.Models;
 using System;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web.UI;
 
 namespace SampleApp
@@ -36,6 +39,7 @@ namespace SampleApp
                 };
 
                 lblMessage.Text = registrationModuleObj.Register(model);
+                Task.Run(async () => await SendEmail(model.Email));
             }
             else
             {
@@ -45,5 +49,33 @@ namespace SampleApp
             string script = "setTimeout(function() { $('#myModal').modal('show'); }, 500);";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", script, true);
         }
+        private async Task SendEmail(string mailAddress)
+        {
+            MailMessage mail = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient();
+            mail.To.Add(mailAddress);
+            mail.From = new MailAddress("no-replay@sampleapp.com");
+            mail.Subject = "Sample Web Application Registration Completed";
+            mail.IsBodyHtml = true;
+            mail.Body = $"You have registered your email address {mailAddress} with sample web application";        
+           
+            
+            SmtpServer.UseDefaultCredentials = false;
+            SmtpServer.Host = "smtp.gmail.com";
+            SmtpServer.EnableSsl = true;
+            SmtpServer.Port = 587;
+            SmtpServer.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+            SmtpServer.Credentials = new NetworkCredential("jeevandatafortune@gmail.com", "fortune2024@");           
+            try
+            {
+               
+                await SmtpServer.SendMailAsync(mail);
+            }
+            catch (Exception ex)
+            {
+             
+            }
+        }
     }
 }
+  
